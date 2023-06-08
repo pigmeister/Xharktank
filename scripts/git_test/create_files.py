@@ -1,6 +1,6 @@
 import os
 
-path = './output/'
+path = '../dest/dump'
 
 query1lines = ['hello', 'me', 'nipun']
 query1 = '\n'.join(query1lines)

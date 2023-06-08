@@ -11,25 +11,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        path: src
         fetch-depth: '0'
+    - uses: actions/checkout@v3
+      with:
+        repository: pigmeister/node-weather-website
+        ref: test-head
+        path: dest
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
         cache: 'pip'
-    - name: Generate file
+    - name: Generate files
+      working-directory: src
       run: |
-        mkdir ./output
         pip install -r ./scripts/git_test/requirements.txt
         python ./scripts/git_test/create_files.py
-    - name: Move files
+    - name: Push files
       uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
       env:
         SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
       with:
-        source-directory: './output/'
-        destination-github-username: 'pigmeister'
-        destination-repository-name: 'node-weather-website'
-        user-email: 'github-actions[bot]@users.noreply.github.com'
+        source-directory: dest
+        destination-github-username: pigmeister
+        destination-repository-name: node-weather-website
+        user-email: github-actions[bot]@users.noreply.github.com
         commit-message: 'Added new files'
         target-branch: test-head
     - name: Generate token
@@ -39,6 +45,7 @@ jobs:
         app_id: ${{ secrets.GH_APP_ID }}
         private_key: ${{ secrets.GH_APP_SECRET }}
     - name: Create PR
+      working-directory: src
       env:
         TOKEN: ${{ steps.generate_token.outputs.token }}
       run: |
