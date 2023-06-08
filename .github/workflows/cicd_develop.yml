@@ -9,25 +9,9 @@ jobs:
   generate_pr:
     runs-on: ubuntu-latest
     steps:
-    - name: Generate token
-      id: generate_token
-      uses: tibdex/github-app-token@v1
-      with:
-        app_id: ${{ secrets.GH_APP_ID }}
-        private_key: ${{ secrets.GH_APP_SECRET }}
     - uses: actions/checkout@v3
       with:
-        path: 'src'
         fetch-depth: '0'
-        persist-credentials: false
-    - uses: actions/checkout@v3
-      env:
-        TOKEN: ${{ steps.generate_token.outputs.token }}
-      with:
-        path: 'dest'
-        ref: 'test-head'
-        fetch-depth: '0'
-        repository: 'pigmeister/node-weather-website'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
@@ -35,14 +19,29 @@ jobs:
     - name: Generate file
       working-directory: src
       run: |
+        mkdir ./output
         pip install -r ./scripts/git_test/requirements.txt
         python ./scripts/git_test/create_files.py
+    - name: Pushes to public repository
+      uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
+      env:
+        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+      with:
+        source-directory: './output/'
+        destination-github-username: 'pigmeister'
+        destination-repository-name: 'node-weather-website'
+        user-email: 'github-actions[bot]@users.noreply.github.com'
+        commit-message: 'Added new files'
+        target-branch: test-head
+    - name: Generate token
+      id: generate_token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.GH_APP_ID }}
+        private_key: ${{ secrets.GH_APP_SECRET }}
     - name: Move file and create PR
+      env:
+        TOKEN: ${{ steps.generate_token.outputs.token }}
       working-directory: dest
       run: |
-        git config user.name 'github-actions[bot]'
-        git config user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
-        git commit -m 'Added new files'
-        git push origin test-head
-        python ./scripts/git_test/git_test.py
+        python ./scripts/git_test/git_test.py  
