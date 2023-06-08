@@ -1,9 +1,10 @@
+import os
 import json
 import requests
 
 r = requests.post(url="https://api.github.com/repos/pigmeister/node-weather-website/pulls",
         headers={
-            "Authorization": "Bearer {0}".format('ghs_xZ8DUexKZ9l2jFgnWjfOvKuYmgevIf0zUApE'),
+            "Authorization": "Bearer {0}".format(os.environ['TOKEN']),
             "Content-Type": "application/json"
         },
         data=json.dumps({
