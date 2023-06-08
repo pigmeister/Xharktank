@@ -9,19 +9,27 @@ jobs:
   generate_pr:
     runs-on: ubuntu-latest
     steps:
+    - name: Generate token
+      id: generate_token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.GH_APP_ID }}
+        private_key: ${{ secrets.GH_APP_SECRET }}
     - uses: actions/checkout@v3
       with:
         path: 'src'
         fetch-depth: '0'
         persist-credentials: false
     - uses: actions/checkout@v3
+      env:
+        TOKEN: ${{ steps.generate_token.outputs.token }}
       with:
         path: 'dest'
         ref: 'test-head'
         fetch-depth: '0'
         repository: 'pigmeister/node-weather-website'
         persist-credentials: true
-        token: 'ghs_xZ8DUexKZ9l2jFgnWjfOvKuYmgevIf0zUApE'
+        token: '{TOKEN}'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
