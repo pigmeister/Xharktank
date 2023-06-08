@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         repository: pigmeister/node-weather-website
-        ref: test-head
+        ref: test-base
         ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
         path: dest
     - uses: actions/setup-python@v4
@@ -33,9 +33,11 @@ jobs:
       run: |
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git branch test-head
+        git checkout test-head
         git add .
         git commit -m 'Added files'
-        git push
+        git push origin test-head
     - name: Generate token
       id: generate_token
       uses: tibdex/github-app-token@v1
