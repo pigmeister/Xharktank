@@ -3,7 +3,7 @@ import requests
 
 r = requests.post(url="https://api.github.com/repos/pigmeister/node-weather-website/pulls",
         headers={
-            "Authorization": "Bearer {0}".format('ghs_LjiMzcv1JDnGJoRMf2xAehOeuah1wt0M3Jtr'),
+            "Authorization": "Bearer {0}".format('ghs_9Ve6EzTjmqxKBZI8kCAAtcOfTxThue2NP8GP'),
             "Content-Type": "application/json"
         },
         data=json.dumps({
