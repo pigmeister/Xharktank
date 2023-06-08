@@ -31,6 +31,8 @@ jobs:
     - name: Move file and create PR
       working-directory: dest
       run: |
+        git config --global user.name "pigmeister"
+        git config --global user.email "nipuntopno77@gmail.com"
         git add .
         git commit -m 'Added new files'
         git push origin test-head
