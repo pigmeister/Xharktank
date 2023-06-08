@@ -17,7 +17,6 @@ jobs:
         python-version: '3.7'
         cache: 'pip'
     - name: Generate file
-      working-directory: src
       run: |
         mkdir ./output
         pip install -r ./scripts/git_test/requirements.txt
