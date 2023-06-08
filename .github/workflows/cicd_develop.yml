@@ -28,8 +28,6 @@ jobs:
         ref: 'test-head'
         fetch-depth: '0'
         repository: 'pigmeister/node-weather-website'
-        persist-credentials: true
-        token: '{TOKEN}'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
