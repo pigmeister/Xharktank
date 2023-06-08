@@ -21,7 +21,7 @@ jobs:
         mkdir ./output
         pip install -r ./scripts/git_test/requirements.txt
         python ./scripts/git_test/create_files.py
-    - name: Pushes to public repository
+    - name: Move files
       uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
       env:
         SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
@@ -38,9 +38,8 @@ jobs:
       with:
         app_id: ${{ secrets.GH_APP_ID }}
         private_key: ${{ secrets.GH_APP_SECRET }}
-    - name: Move file and create PR
+    - name: Create PR
       env:
         TOKEN: ${{ steps.generate_token.outputs.token }}
-      working-directory: dest
       run: |
         python ./scripts/git_test/git_test.py  
