@@ -17,6 +17,7 @@ jobs:
       with:
         repository: pigmeister/node-weather-website
         ref: test-head
+        ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
         path: dest
     - uses: actions/setup-python@v4
       with:
@@ -28,16 +29,13 @@ jobs:
         pip install -r ./scripts/git_test/requirements.txt
         python ./scripts/git_test/create_files.py
     - name: Push files
-      uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
-      env:
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-      with:
-        source-directory: dest
-        destination-github-username: pigmeister
-        destination-repository-name: node-weather-website
-        user-email: github-actions[bot]@users.noreply.github.com
-        commit-message: 'Added new files'
-        target-branch: test-head
+      working-directory: dest
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git add .
+        git commit -m 'Added files'
+        git push
     - name: Generate token
       id: generate_token
       uses: tibdex/github-app-token@v1
