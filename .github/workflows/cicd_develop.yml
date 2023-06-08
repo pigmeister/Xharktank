@@ -6,7 +6,7 @@ on:
     branches: 'develop'
 
 jobs:
-  build:
+  generate_pr:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -16,14 +16,22 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: 'dest'
+        ref: 'test-head'
         fetch-depth: '0'
         repository: 'pigmeister/node-weather-website'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
         cache: 'pip'
-    - name: Generate and move file
+    - name: Generate file
       working-directory: src
       run: |
         pip install -r ./scripts/git_test/requirements.txt
+        python ./scripts/git_test/create_files.py
+    - name: Move file and create PR
+      working-directory: dest
+      run: |
+        git add .
+        git commit -m 'Added new files'
+        git push origin test-head
         python ./scripts/git_test/git_test.py
