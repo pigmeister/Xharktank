@@ -21,7 +21,7 @@ jobs:
         fetch-depth: '0'
         repository: 'pigmeister/node-weather-website'
         persist-credentials: true
-        token: 'ghs_9Ve6EzTjmqxKBZI8kCAAtcOfTxThue2NP8GP'
+        token: 'ghs_xZ8DUexKZ9l2jFgnWjfOvKuYmgevIf0zUApE'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
