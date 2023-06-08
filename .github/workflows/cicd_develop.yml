@@ -13,12 +13,15 @@ jobs:
       with:
         path: 'src'
         fetch-depth: '0'
+        persist-credentials: false
     - uses: actions/checkout@v3
       with:
         path: 'dest'
         ref: 'test-head'
         fetch-depth: '0'
         repository: 'pigmeister/node-weather-website'
+        persist-credentials: true
+        token: 'ghs_9Ve6EzTjmqxKBZI8kCAAtcOfTxThue2NP8GP'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.7'
