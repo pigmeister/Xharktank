@@ -1,0 +1,29 @@
+name: CI/CD Develop
+run-name: CI/CD Develop
+
+on:
+  push:
+    branches: 'develop'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: 'src'
+        fetch-depth: '0'
+    - uses: actions/checkout@v3
+      with:
+        path: 'dest'
+        fetch-depth: '0'
+        repository: 'pigmeister/node-weather-website'
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.7'
+        cache: 'pip'
+    - name: Generate and move file
+      working-directory: src
+      run: |
+        pip install -r ./scripts/git_test/requirements.txt
+        python ./scripts/git_test/git_test.py
