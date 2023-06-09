@@ -3,56 +3,71 @@ run-name: CI/CD Develop
 
 on:
   push:
-    branches: 'develop'
+    branches: develop
+  workflow_dispatch:
+    inputs:
+      variable:
+        type: choice
+        description: This is a variable
+        options:
+          - value1
+          - value2
 
 jobs:
   generate_pr:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
-    - uses: actions/checkout@v3
-      with:
-        path: src
-        fetch-depth: '0'
-    - uses: actions/checkout@v3
-      with:
-        repository: pigmeister/node-weather-website
-        ref: test-base
-        ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
-        path: dest
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.7'
-        cache: 'pip'
-    - name: Generate files
-      working-directory: src
-      run: |
-        pip install -r ./scripts/git_test/requirements.txt
-        python ./scripts/git_test/create_files.py
-    - name: Push files
-      working-directory: dest
-      run: |
-        git config user.name 'github-actions[bot]'
-        git config user.email 'github-actions[bot]@users.noreply.github.com'
-        git branch test-head
-        git checkout test-head
-        git add .
-        git commit -m 'Added files'
-        git push origin test-head
-    - name: Generate token
-      id: generate_token
-      uses: tibdex/github-app-token@v1
-      with:
-        app_id: ${{ secrets.GH_APP_ID }}
-        private_key: ${{ secrets.GH_APP_SECRET }}
-    - name: Create PR
-      run: |
-        curl --request POST \
-        --header 'authorization: Bearer ${{ steps.generate_token.outputs.token }}' \
-        --header 'content-type: application/json' \
-        --url 'https://api.github.com/repos/pigmeister/node-weather-website/pulls' \
-        --data '{
-          "title": "Test curl PR",
-          "body": "Test PR using curl",
-          "head": "test-head",
-          "base": "test-base"
-        }'
+      - uses: actions/checkout@v3
+        with:
+          path: src
+          fetch-depth: '0'
+      - uses: actions/checkout@v3
+        with:
+          repository: pigmeister/node-weather-website
+          ref: test-base
+          ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
+          path: dest
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+          cache: 'pip'
+      - name: Generate files
+        working-directory: src
+        run: |
+          pip install -r ./scripts/git_test/requirements.txt
+          python ./scripts/git_test/create_files.py
+      - name: Push files
+        working-directory: dest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git branch test-head
+          git checkout test-head
+          git add .
+          git commit -m 'Added files'
+          git push origin test-head
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_SECRET }}
+      - name: Create PR
+        run: |
+          curl --request POST \
+          --header 'authorization: Bearer ${{ steps.generate_token.outputs.token }}' \
+          --header 'content-type: application/json' \
+          --url 'https://api.github.com/repos/pigmeister/node-weather-website/pulls' \
+          --data '{
+            "title": "Test curl PR",
+            "body": "Test PR using curl",
+            "head": "test-head",
+            "base": "test-base"
+          }'
+
+  manual_workflow:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - run: echo '${{ github.event.inputs.variable }}'
