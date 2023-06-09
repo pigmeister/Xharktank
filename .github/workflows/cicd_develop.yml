@@ -40,7 +40,7 @@ jobs:
       - name: Push files
         working-directory: dest
         run: |
-          git config user.name 'pigmeister'
+          git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git branch test-head
           git checkout test-head
