@@ -10,8 +10,8 @@ on:
         type: choice
         description: This is a variable
         options:
-          - value1
-          - value2
+          - value3
+          - value4
 
 jobs:
   generate_pr:
