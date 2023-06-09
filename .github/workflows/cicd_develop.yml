@@ -10,8 +10,8 @@ on:
         type: choice
         description: This is a variable
         options:
-          - value1
-          - value2
+          - value3
+          - value4
 
 jobs:
   generate_pr:
@@ -41,7 +41,7 @@ jobs:
         working-directory: dest
         run: |
           git config user.name 'pigmeister'
-          git config user.email 'nipuntopno77@gmail.com'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
           git branch test-head
           git checkout test-head
           git add .
