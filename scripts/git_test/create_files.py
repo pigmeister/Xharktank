@@ -22,16 +22,16 @@ query2 = '\n'.join(query2lines)
 file1dir = repo_path + 'file1'
 if not os.path.isdir(file1dir):
     os.mkdir(file1dir)
-file1path = repo_path + 'file1/' + 'file5.sql'
+file1path = repo_path + 'file1/' + 'file7.sql'
 with open(file1path, 'w+') as file1:
     file1.write(query1)
 
 file2dir = repo_path + 'file2'
 if not os.path.isdir(file2dir):
     os.mkdir(file2dir)
-file2path = repo_path + 'file2/' + 'file6.sql'
+file2path = repo_path + 'file2/' + 'file8.sql'
 with open(file2path, 'w+') as file2:
-    file2.write(query2)
+    file2.append(query2)
 
 
 repo.config_writer().set_value("user", "name", "postmanbuilder[bot]").release()
