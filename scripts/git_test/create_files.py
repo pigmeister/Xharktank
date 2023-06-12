@@ -40,4 +40,4 @@ repo.git.add(repo_path)
 
 repo.git.commit('-m', 'Test commit')
 
-repo.git.push('origin', 'test-base')
+repo.git.push('origin', 'test-head')
