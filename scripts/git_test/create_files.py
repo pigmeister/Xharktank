@@ -22,14 +22,14 @@ query2 = '\n'.join(query2lines)
 file1dir = './.scripts/node-weather-website/' + 'file1'
 if not os.path.isdir(file1dir):
     os.mkdir(file1dir)
-file1path = repo_path + 'file1/' + 'file1.sql'
+file1path = file1dir + '/file1.sql'
 with open(file1path, 'w+') as file1:
     file1.write(query1)
 
 file2dir = './.scripts/node-weather-website/' + 'file2'
 if not os.path.isdir(file2dir):
     os.mkdir(file2dir)
-file2path = repo_path + 'file2/' + 'file2.sql'
+file2path = file2dir + '/file2.sql'
 with open(file2path, 'w+') as file2:
     file2.write(query2)
 
