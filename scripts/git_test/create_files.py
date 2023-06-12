@@ -31,7 +31,7 @@ if not os.path.isdir(file2dir):
     os.mkdir(file2dir)
 file2path = repo_path + 'file2/' + 'file8.sql'
 with open(file2path, 'w+') as file2:
-    file2.append(query2)
+    file2.write(query2)
 
 
 repo.config_writer().set_value("user", "name", "postmanbuilder[bot]").release()
