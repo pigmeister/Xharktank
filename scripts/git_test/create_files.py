@@ -34,6 +34,8 @@ with open(file2path, 'w+') as file2:
     file2.write(query2)
 
 
+repo.config_writer().set_value("user", "name", "postmanbuilder[bot]").release()
+
 repo.git.add(repo_path)
 
 repo.git.commit('-m', 'Test commit')

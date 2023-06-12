@@ -23,8 +23,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           install -m 600 -D /dev/null ~/.ssh/id_rsa.pub
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-          git config user.name 'postmanbuilder[bot]'
-          git config user.email 'postmanbuilder[bot]@users.noreply.github.com'
           pip install -r ./scripts/git_test/requirements.txt
           python ./scripts/git_test/create_files.py
       - name: Generate token
