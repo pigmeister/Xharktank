@@ -35,6 +35,7 @@ with open(file2path, 'w+') as file2:
 
 
 repo.config_writer().set_value("user", "name", "postmanbuilder[bot]").release()
+repo.config_writer().set_value("user", "email", "postmanbuilder[bot]@users.noreply.github.com").release()
 
 repo.git.add(repo_path)
 
