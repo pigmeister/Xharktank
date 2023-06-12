@@ -2,11 +2,11 @@ import os
 import git
 from git import Repo
 
-repo_path = './.scripts/node-weather-website'
+repo_path = os.getcwd() + '/.scripts/node-weather-website'
 
 Repo.clone_from(url='git@github.com:pigmeister/node-weather-website.git', to_path=repo_path, branch='test-base')
 
-repo = Repo(path=repo_path)
+repo = Repo(path='./.scripts/node-weather-website')
 
 new_branch = repo.create_head('test-head')
 
