@@ -13,7 +13,7 @@ Repo.clone_from(url='git@github.com:pigmeister/node-weather-website.git', to_pat
 
 repo = Repo(path=REPO_PATH)
 
-repo.git.checkout('test-head')
+repo.git.checkout('-b', 'test-head')
 
 
 query1lines = ['hello', 'me', 'nipun']
@@ -49,7 +49,7 @@ repo.git.push('origin', 'test-head')
 response = requests.post(
     url=f'https://api.github.com/repos/pigmeister/node-weather-website/pulls',
     headers={
-        'Authorization': 'Bearer %s' % os.environ.get('BRANCH'),
+        'Authorization': 'Bearer %s' % os.environ.get('ACCESS_TOKEN'),
         'Content-Type': 'application/json'
     },
     data=json.dumps({
