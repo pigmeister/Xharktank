@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: '3.7'
           cache: 'pip'
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_SECRET }}
       - name: Generate files
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
@@ -25,21 +31,6 @@ jobs:
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
           pip install -r ./scripts/git_test/requirements.txt
           python ./scripts/git_test/create_files.py
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.GH_APP_ID }}
-          private_key: ${{ secrets.GH_APP_SECRET }}
-      - name: Create PR
-        run: |
-          curl --request POST \
-          --header 'authorization: Bearer ${{ steps.generate_token.outputs.token }}' \
-          --header 'content-type: application/json' \
-          --url 'https://api.github.com/repos/pigmeister/node-weather-website/pulls' \
-          --data '{
-            "title": "Test curl PR",
-            "body": "Test PR using curl",
-            "head": "test-head",
-            "base": "test-base"
-          }'
+        env:
+          ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
+          BRANCH: ${{ github.event.ref }}
