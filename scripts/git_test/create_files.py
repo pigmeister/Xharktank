@@ -4,11 +4,14 @@ from git import Repo
 import json
 import requests
 
-repo_path = os.getcwd() + '/.scripts/node-weather-website'
+REPO_PATH = '.scripts/node-weather-website'
+
+
+repo_path = os.getcwd() + '/' + REPO_PATH
 
 Repo.clone_from(url='git@github.com:pigmeister/node-weather-website.git', to_path=repo_path, branch='test-base')
 
-repo = Repo(path='.scripts/node-weather-website')
+repo = Repo(path=REPO_PATH)
 
 repo.git.checkout('test-head')
 
@@ -19,14 +22,14 @@ query1 = '\n'.join(query1lines)
 query2lines = ['sup', 'is', 'me']
 query2 = '\n'.join(query2lines)
 
-file1dir = '/.scripts/node-weather-website/' + 'file1'
+file1dir = REPO_PATH + '/file1'
 if not os.path.isdir(file1dir):
     os.mkdir(file1dir)
 file1path = file1dir + '/file1.sql'
 with open(file1path, 'w+') as file1:
     file1.write(query1)
 
-file2dir = '/.scripts/node-weather-website/' + 'file2'
+file2dir = REPO_PATH + '/file2'
 if not os.path.isdir(file2dir):
     os.mkdir(file2dir)
 file2path = file2dir + '/file2.sql'
