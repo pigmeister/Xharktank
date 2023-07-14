@@ -8,7 +8,7 @@ repo_path = os.getcwd() + '/.scripts/node-weather-website'
 
 Repo.clone_from(url='git@github.com:pigmeister/node-weather-website.git', to_path=repo_path, branch='test-base')
 
-repo = Repo(path='/.scripts/node-weather-website')
+repo = Repo(path='.scripts/node-weather-website')
 
 repo.git.checkout('test-head')
 
