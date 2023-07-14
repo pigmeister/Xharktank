@@ -13,7 +13,7 @@ Repo.clone_from(url='git@github.com:pigmeister/node-weather-website.git', to_pat
 
 repo = Repo(path=REPO_PATH)
 
-repo.git.checkout('test-head')
+repo.git.checkout('-b', 'test-head')
 
 
 query1lines = ['hello', 'me', 'nipun']
