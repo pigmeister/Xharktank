@@ -1,0 +1,53 @@
+name: Comment on PR
+run-name: Comment on PR
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  comment_on_pr:
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: github/branch-deploy@v5.2.2
+        id: branch-deploy
+        with:
+          trigger: .review
+          environment: beta
+          environment_targets: beta,stage,preview,production
+          noop_trigger: view
+          skip_reviews: beta,stage,preview,production
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.branch-deploy.outputs.ref }}
+          fetch-depth: '0'
+
+      - uses: actions/setup-python@v4
+        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        run: pip install -r ./scripts/git_test/requirements.txt
+
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_SECRET }}
+
+      - name: Comment
+        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        run: |
+          python ./scripts/git_test/comment_pr.py
+        env:
+          ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
+          ENV: ${{ steps.branch-deploy.outputs.environment }}
+          PR_NUMBER: ${{ github.event.issue.number }}
