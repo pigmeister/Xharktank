@@ -3,7 +3,6 @@ run-name: CI/CD Develop
 
 on:
   push:
-    branches: develop
 
 jobs:
   generate_pr:
