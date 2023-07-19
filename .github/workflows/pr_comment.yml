@@ -20,7 +20,7 @@ jobs:
       - uses: github/branch-deploy@v5.2.2
         id: branch-deploy
         with:
-          trigger: .review
+          trigger: .check
           environment: beta
           environment_targets: beta,stage,preview,production
           noop_trigger: view
@@ -57,3 +57,9 @@ jobs:
           ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
           ENV: ${{ steps.branch-deploy.outputs.environment }}
           PR_NUMBER: ${{ github.event.issue.number }}
+
+      - name: fake noop deploy
+        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        run: |
+          echo "DEPLOY_MESSAGE=I would have **updated** 1 server" >> $GITHUB_ENV
+          echo "I am doing a fake noop deploy"
