@@ -23,7 +23,7 @@ jobs:
           trigger: .deploy
           environment: beta
           environment_targets: beta,stage,preview,production
-          noop_trigger: check
+          noop_trigger: .check
           skip_reviews: beta,stage,preview,production
 
       - uses: actions/checkout@v3
