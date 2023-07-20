@@ -29,12 +29,10 @@ data = {
     ]
 }
 
-message = f'{VIEW_ONLY}_{NOOP_MODE}_'
-
-message += 'Previewing commands:\n```' if NOOP_MODE else 'Deploying commands:\n```'
+message = 'Previewing commands:\n```' if NOOP_MODE == 'true' else 'Deploying commands:\n```'
 
 for key, value in data.items():
-    if VIEW_ONLY and 'vw_' not in key:
+    if VIEW_ONLY == 'true' and 'vw_' not in key:
         continue
     message += '\n' + '\n'.join(value) + '\n'
 
