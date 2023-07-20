@@ -26,6 +26,15 @@ jobs:
           noop_trigger: .check
           skip_reviews: beta,stage,preview,production
 
+      - name: Check Authorization
+        uses: actions/github-script@v3
+        if: |
+          steps.branch-deploy.outputs.noop == 'false' &&
+          contains(fromJSON('["pigmeister"]'), github.actor) == true
+        with:
+          script: |
+            core.setFailed('Not authorized to deploy')
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ steps.branch-deploy.outputs.ref }}
@@ -45,8 +54,7 @@ jobs:
         id: generate_token
         uses: tibdex/github-app-token@v1
         if: |
-          steps.branch-deploy.outputs.continue == 'true' &&
-          steps.branch-deploy.outputs.noop == 'true'
+          steps.branch-deploy.outputs.continue == 'true'
         with:
           app_id: ${{ secrets.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_SECRET }}
@@ -66,7 +74,6 @@ jobs:
 
       - name: Comment deploy
         if: |
-          contains(fromJSON('["pigmeister"]'), github.actor) &&
           steps.branch-deploy.outputs.continue == 'true' &&
           steps.branch-deploy.outputs.noop == 'false'
         run: |
