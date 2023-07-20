@@ -36,4 +36,6 @@ for key, value in data:
         continue
     message += '\n' + value.join('\n') + '\n'
 
+message += '```'
+
 create_pr(message=message)
