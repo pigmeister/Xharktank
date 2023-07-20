@@ -21,10 +21,8 @@ jobs:
             echo ${GITHUB_REF#refs/heads}
             exit 1;
           fi
-  check-pr:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    steps:
+
       - uses: deepakputhraya/action-pr-title@master
+        if: ${{ github.event_name == 'pull_request' }}
         with:
-          regex: '\[[a-zA-Z0.9-]*\].*' # Regex the title should match.
+          regex: '\[[a-zA-Z0-9-]*\].*' # Regex the title should match.
