@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: valid branch name
         run: |
-          if [[ ${GITHUB_REF#refs/heads} != refs/pull* ]] && [[ ${GITHUB_REF#refs/heads} != feature* ]]; then
+          if [[ ${GITHUB_REF#refs/heads/} != refs/pull* ]] && [[ ${GITHUB_REF#refs/heads/} != feature* ]]; then
             echo ${GITHUB_REF#refs/heads}
             exit 1;
           fi
