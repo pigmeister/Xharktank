@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: github/branch-deploy@v5.2.2
+      - uses: github/branch-deploy@v7.0.0
         id: branch-deploy
         with:
-          trigger: .check
+          trigger: .deploy
           environment: beta
           environment_targets: beta,stage,preview,production
-          noop_trigger: view
+          noop_trigger: check
           skip_reviews: beta,stage,preview,production
 
       - uses: actions/checkout@v3
@@ -44,22 +44,36 @@ jobs:
       - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@v1
-        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+        if: |
+          steps.branch-deploy.outputs.continue == 'true' &&
+          steps.branch-deploy.outputs.noop == 'true'
         with:
           app_id: ${{ secrets.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_SECRET }}
 
-      - name: Comment
-        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+      - name: Comment check
+        if: |
+          steps.branch-deploy.outputs.continue == 'true' &&
+          steps.branch-deploy.outputs.noop == 'true'
         run: |
           python ./scripts/git_test/comment_pr.py
         env:
           ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
           ENV: ${{ steps.branch-deploy.outputs.environment }}
           PR_NUMBER: ${{ github.event.issue.number }}
+          NOOP_MODE: ${{ steps.branch-deploy.outputs.noop }}
+          VIEW_ONLY: ${{ steps.branch-deploy.outputs.params == 'view' }}
 
-      - name: fake noop deploy
-        if: ${{ steps.branch-deploy.outputs.continue == 'true' }}
+      - name: Comment deploy
+        if: |
+          contains(fromJSON('["pigmeister"]'), github.actor) &&
+          steps.branch-deploy.outputs.continue == 'true' &&
+          steps.branch-deploy.outputs.noop == 'false'
         run: |
-          echo "DEPLOY_MESSAGE=I would have **updated** 1 server" >> $GITHUB_ENV
-          echo "I am doing a fake noop deploy"
+          python ./scripts/git_test/comment_pr.py
+        env:
+          ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
+          ENV: ${{ steps.branch-deploy.outputs.environment }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          NOOP_MODE: ${{ steps.branch-deploy.outputs.noop }}
+          VIEW_ONLY: ${{ steps.branch-deploy.outputs.params == 'view' }}
