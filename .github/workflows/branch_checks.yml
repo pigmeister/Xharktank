@@ -5,9 +5,8 @@ on:
   push:
     branches:
       - '**'
-      - '!release/beta'
       - '!develop'
-      - '!master'
+      - '!main'
   pull_request:
     types: [opened, reopened, edited]
 
@@ -19,7 +18,7 @@ jobs:
       - name: valid branch name
         run: |
           if [[ ${GITHUB_REF#refs/heads} != refs/pull* ]] && [[ ${GITHUB_REF#refs/heads} != feature* ]]; then
-            echo "wrong name"
+            echo ${GITHUB_REF#refs/heads}
             exit 1;
           fi
   check-pr:
