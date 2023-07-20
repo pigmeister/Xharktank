@@ -1,0 +1,31 @@
+name: Convention checks
+run-name: Convention checks
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!release/beta'
+      - '!develop'
+      - '!master'
+  pull_request:
+    types: [opened, reopened, edited]
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: valid branch name
+        run: |
+          if [[ ${GITHUB_REF#refs/heads} != refs/pull* ]] && [[ ${GITHUB_REF#refs/heads} != feature* ]]; then
+            echo "wrong name"
+            exit 1;
+          fi
+  check-pr:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '\[[a-zA-Z0.9-]*\].*' # Regex the title should match.
